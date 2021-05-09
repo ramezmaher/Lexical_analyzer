@@ -27,7 +27,11 @@ bool DFA_state::compare(DFA_state* state){
     return (edges == state->edges && (is_accepting ^ state->isAccepting()) == 0);
 }
 
-void 
+void DFA_state::print_dir(){
+    for(auto transition: edges){
+        printf("\t%s --> %d",transition.first,transition.second->get_id());
+    }
+}
 
 int main(){
     /* Just for testing :) */
