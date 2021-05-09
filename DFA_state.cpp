@@ -15,7 +15,7 @@ bool DFA_state::isAccepting(){
     return is_accepting;
 }
 
-void DFA_state::add_direction(string input,DFA_state* target){
+void DFA_state::add_direction(char input,DFA_state* target){
     edges[input] = target;
 }
 

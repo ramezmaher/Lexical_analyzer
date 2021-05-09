@@ -10,13 +10,13 @@ int main(){
         all_states.push_back(state);
     }
 
-    vector<string> inputs;
-    inputs.push_back("0");
-    inputs.push_back("1");
+    vector<char> inputs;
+    inputs.push_back('0');
+    inputs.push_back('1');
 
     for(int i = 1; i < 9; i++){
-        all_states.at(i)->add_direction("0",all_states.at(i-1));
-        all_states.at(i)->add_direction("1",all_states.at(i+1));
+        all_states.at(i)->add_direction('0',all_states.at(i-1));
+        all_states.at(i)->add_direction('1',all_states.at(i+1));
     }
 
     DFA table(inputs,all_states);

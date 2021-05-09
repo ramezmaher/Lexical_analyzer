@@ -11,7 +11,7 @@ class DFA{
     bool is_minimized;
     DFA_state* dead_state;
     public:
-        DFA(vector<string> inputs,vector<DFA_state*> all_states);
+        DFA(vector<char> inputs,vector<DFA_state*> all_states);
         void minimize();
         void print_states(); 
 };

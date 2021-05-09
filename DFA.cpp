@@ -4,7 +4,7 @@
 #include "DFA_state.h"
 #include "DFA.h"
 
-DFA::DFA(vector<string> inputs,vector<DFA_state*> all_states){
+DFA::DFA(vector<char> inputs,vector<DFA_state*> all_states){
     //Initilize dead state
     DFA_state* dead_state = new DFA_state(false,0);
 
