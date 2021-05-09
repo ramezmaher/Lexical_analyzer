@@ -32,14 +32,8 @@ DFA::DFA(vector<string> inputs,vector<DFA_state*> all_states){
  
 void DFA::print_states(){
     for(auto state: states){
-        printf("%d :- ",state->get_id());
+        cout << state->get_id() << ":-" << endl;
         state->print_dir();
+        cout << "**********" <<  endl;
     }
 }
-
-int main(){
-    
-}
-
-
-

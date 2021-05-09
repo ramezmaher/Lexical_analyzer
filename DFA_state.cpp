@@ -29,11 +29,6 @@ bool DFA_state::compare(DFA_state* state){
 
 void DFA_state::print_dir(){
     for(auto transition: edges){
-        printf("\t%s --> %d",transition.first,transition.second->get_id());
+        cout << "\t" << transition.first << " --> " << transition.second->get_id() << endl;
     }
-}
-
-int main(){
-    /* Just for testing :) */
-    return 0;
 }
