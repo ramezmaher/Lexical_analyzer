@@ -19,6 +19,7 @@ class DFA_state{
         int get_id();
         bool compare(DFA_state* B);
         void print_dir();
+
 };
 
 #endif

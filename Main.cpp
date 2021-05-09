@@ -1,24 +1,34 @@
 #include <vector>
 #include <string>
+#include <iostream>
 #include "DFA_state.h"
 #include "DFA.h"
 
 int main(){
     vector<DFA_state*> all_states;
-    for(int i = 1; i <= 10; i++){
-        DFA_state* state = new DFA_state(false,i);
-        all_states.push_back(state);
-    }
+    DFA_state* state1 = new DFA_state(false,1);
+    DFA_state* state2 = new DFA_state(false,2);
+    DFA_state* state3 = new DFA_state(true,3);
 
     vector<char> inputs;
     inputs.push_back('0');
     inputs.push_back('1');
 
-    for(int i = 1; i < 9; i++){
-        all_states.at(i)->add_direction('0',all_states.at(i-1));
-        all_states.at(i)->add_direction('1',all_states.at(i+1));
-    }
+    state1->add_direction('0',state2);
+    state1->add_direction('1',state3);
+    all_states.push_back(state1);
+
+    state2->add_direction('0',state3);
+    state2->add_direction('1',state3);
+    all_states.push_back(state2);
+
+    state3->add_direction('0',state1);
+    state3->add_direction('1',state3);
+    all_states.push_back(state3);
+
 
     DFA table(inputs,all_states);
-    table.print_states(); 
+    table.minimize();
+    table.print_states();
+
 }

@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include "DFA_state.h"
 
 
@@ -13,7 +14,10 @@ class DFA{
     public:
         DFA(vector<char> inputs,vector<DFA_state*> all_states);
         void minimize();
-        void print_states(); 
+        void print_states();
+
+    private:
+        bool check_sizes(vector<unordered_set<DFA_state*>> v); 
 };
 
 #endif
