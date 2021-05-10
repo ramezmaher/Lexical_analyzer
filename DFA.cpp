@@ -7,31 +7,39 @@
 
 DFA::DFA(vector<char> inputs,vector<DFA_state*> all_states){
     //Initilize dead state
-    DFA_state* dead_state = new DFA_state(false,0);
-
+    DFA_state* fi_state = new DFA_state(false,all_states.size()+1);
+    start_state = all_states[0];
+    start_state_id = start_state->get_id();
     //For all possible inputs, if a state does not have a valid transition, make a transition to dead_state. 
     //Initialize dead_state's transitions under all inputs to itself
     bool is_dead_used = false;
     for(auto input: inputs){
-         dead_state->add_direction(input,dead_state);
+         fi_state->add_direction(input,fi_state);
          for(auto state: all_states){
              if(state->edges.find(input) == state->edges.end()){
                  is_dead_used = true;
-                 state->edges.insert(make_pair(input,dead_state));
+                 state->edges.insert(make_pair(input,fi_state));
              }
          }
     }
-    //add dead state to the table;
-    if(is_dead_used)
-        states.push_back(dead_state);
-
     //add all the states to the DFA table 
     for(auto state: all_states){
         states.push_back(state);
     }
 
-    //checks if table is minimized, currently it has only the dead_state, hence it does not require minimization
-    is_minimized = false;
+    //add dead state to the table, if at least one state is pointing to it.
+    if(is_dead_used){
+        dead_state_id = fi_state->get_id();
+        dead_state = fi_state;
+        states.push_back(fi_state);
+    }
+    else{
+        dead_state_id = -1;
+        delete fi_state;
+    }
+
+    //minimizes the DFA
+    minimize();
 }
  
 void DFA::print_states(){
@@ -46,10 +54,6 @@ void DFA::print_states(){
 }
 
 void DFA::minimize(){
-    // check if no minimization required
-    if(is_minimized)
-        return;
-
     //vector to hold each of the partions levels
     vector<unordered_set<DFA_state*>> level;
 
@@ -68,7 +72,6 @@ void DFA::minimize(){
 
     //check if no minimataion required. Either both of them is empty or contains only one state or one of them is empty and the other contains one state
     if((accepting_states.size() == 1 && nonaccepting_states.size() == 1) || (accepting_states.empty() && nonaccepting_states.empty()) || ((accepting_states.empty() || nonaccepting_states.empty()) && (accepting_states.size() == 1 || nonaccepting_states.size() == 1))){
-            is_minimized = true;
             return;
     }
 
@@ -77,7 +80,6 @@ void DFA::minimize(){
 
     //this loop will serve to partition all the states into the minimum number of sets 
     while(true){
-        
         //if all sets contains only one state, then there is no need to minimize.
         if(check_sizes(level))
             break;
@@ -154,7 +156,6 @@ void DFA::minimize(){
             level = next_level;
         
     }
-
     //clear old states
     states.clear();
 
@@ -181,13 +182,27 @@ void DFA::minimize(){
                     }
                 }
                 states.at(i)->add_direction(c,states.at(target));
-            }
+            }  
             break;
         }
     }
 
-    is_minimized = true;
-
+    //reset starting state & dead state
+    bool found = false;
+    for(int i = 0; i < level.size() ; i++){
+        for(auto elem: level.at(i)){
+            if(start_state_id == elem->get_id()){   
+                start_state = states.at(i);
+                start_state_id = i;
+            }
+            else if(dead_state_id != -1 && dead_state_id == elem->get_id()){
+                dead_state = states.at(i);
+                dead_state_id = i;
+            }
+            //delete this element from the heap
+            delete elem;
+        }
+    } 
 }
 
 bool DFA::check_sizes(vector<unordered_set<DFA_state*>> v){
@@ -196,4 +211,20 @@ bool DFA::check_sizes(vector<unordered_set<DFA_state*>> v){
             return false;
     }
         return true;   
+}
+
+DFA_state* DFA::get_start_state(){
+    return start_state;
+}
+
+DFA_state* DFA::get_dead_state(){
+    if(dead_state_id != -1)
+        return dead_state;
+    else return NULL;
+}
+
+void DFA:: delete_DFA(){
+    for(auto x: states){
+        delete this;
+    }
 }
