@@ -15,8 +15,6 @@ class NFA_maker{
         NFA* getNFA(string regularExpression);
         void buildNFAInputs(NFA* nfa);
         int getNextID();
-        string removeShortcuts(string a);
-        string expand(string s);    
         void showNFA(NFA* nfa);
 };
 

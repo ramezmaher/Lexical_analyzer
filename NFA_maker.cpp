@@ -11,51 +11,10 @@
 
 using namespace std;
 
-map<string,string> regularDefinitions;
-
 int NFA_maker::getNextID()
 {
     static int id = 0;
     return id++;
-}
-
-// Removes shortcuts in regular definition (0-9 , a-z , ...)
-string NFA_maker::removeShortcuts(string a)
-{
-    static string lowerCaseLetters = "a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z";
-    static string upperCaseLetters = "A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z";
-    static string nums = "0|1|2|3|4|5|6|7|8|9";
-
-    int pos = a.find("a-z");
-    if (pos != -1)
-        a.replace(pos, 3, lowerCaseLetters);
-
-    pos = a.find("A-Z");
-    if (pos != -1)
-        a.replace(pos, 3, upperCaseLetters);
-
-    pos = a.find("0-9");
-    if (pos != -1)
-        a.replace(pos, 3, nums);
-
-    return a;
-}
-
-string NFA_maker::expand(string s)
-{
-    map<string, string>::iterator itr;
-    for (itr = regularDefinitions.begin(); itr != regularDefinitions.end(); itr++)
-    {
-        string regularDefinition = itr->first;
-        int pos = s.find(regularDefinition);
-        while (pos != -1 && s[pos + regularDefinition.size()] != 's')
-        {
-            string expansion = '(' + itr->second + ')';
-            s.replace(pos,regularDefinition.size(), expansion);
-            pos = s.find(regularDefinition);
-        }
-    }
-    return s;
 }
 
 NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
