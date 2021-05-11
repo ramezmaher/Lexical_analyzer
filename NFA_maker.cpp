@@ -11,6 +11,7 @@
 
 using namespace std;
 
+map<string,string> regularDefinitions;
 
 int NFA_maker::getNextID()
 {
@@ -58,8 +59,6 @@ string NFA_maker::expand(string s)
 }
 
 NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
-{
-    NFA* getNFAindexed(string regularExpression, int start, int end)
 {
     NFA* result = new NFA;;
 
@@ -283,7 +282,7 @@ NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
     return result;
 }
     
-void buildNFAInputs(NFA* nfa) {
+void NFA_maker::buildNFAInputs(NFA* nfa) {
     stack<State*> statesToVisit;
     set<int> visited;
 

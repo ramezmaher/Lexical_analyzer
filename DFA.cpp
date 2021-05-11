@@ -16,6 +16,7 @@ DFA::DFA(set<char> inputs,vector<DFA_state*> all_states){
     bool is_dead_used = false;
     for(auto input: inputs){
          fi_state->add_direction(input,fi_state);
+         valid_inputs.insert(input);
          for(auto state: all_states){
              if(state->edges.find(input) == state->edges.end()){
                  is_dead_used = true;
@@ -229,4 +230,14 @@ void DFA:: delete_DFA(){
         delete x;
     }
     delete this;
+}
+
+bool DFA::check_string(string s){
+    DFA_state* current_state = start_state;
+    for(int i = 0; i < s.length() ; i++){
+        if(valid_inputs.find(s.at(i)) ==valid_inputs.end())
+            return false;
+        current_state = current_state->edges[s.at(i)];
+    }
+    return current_state->isAccepting();
 }

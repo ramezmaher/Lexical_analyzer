@@ -10,6 +10,7 @@
 
 class DFA{
     vector<DFA_state*> states;
+    unordered_set<char> valid_inputs;
     DFA_state* start_state;
     DFA_state* dead_state;
     int start_state_id;
@@ -20,6 +21,7 @@ class DFA{
         DFA_state* get_start_state();
         DFA_state* get_dead_state();
         void delete_DFA();
+        bool check_string(string s);
 
     private:
         bool check_sizes(vector<unordered_set<DFA_state*>> v);
