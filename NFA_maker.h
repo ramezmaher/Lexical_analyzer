@@ -16,7 +16,6 @@ class NFA_maker{
         void buildNFAInputs(NFA* nfa);
         int getNextID();
         string removeShortcuts(string a);
-        map<string, string> getRegularDefintions(vector<string> strs);
         string expand(string s);    
         void showNFA(NFA* nfa);
 };
