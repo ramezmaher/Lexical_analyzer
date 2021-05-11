@@ -13,10 +13,11 @@ class NFA_maker{
     public:
         NFA* getNFAindexed(string regularExpression, int start, int end);
         NFA* getNFA(string regularExpression);
+        void buildNFAInputs(NFA* nfa);
         int getNextID();
         string removeShortcuts(string a);
         map<string, string> getRegularDefintions(vector<string> strs);
-        string expandRegularExpression(string regularExpression, map<string,string> regularDefinitions);    
+        string expand(string s);    
         void showNFA(NFA* nfa);
 };
 
