@@ -40,45 +40,28 @@ string NFA_maker::removeShortcuts(string a)
     return a;
 }
 
-map<string, string> NFA_maker::getRegularDefintions(vector<string> strs)
-{
-    map<string, string> regularDefinitions;
-
-    for (int i = 0; i < strs.size(); i++)
-    {
-        string current = strs[i];
-
-        int pos = current.find("=");
-        if (pos != -1)
-        {
-            current = removeShortcuts(current);
-            string part1 = current.substr(0, pos - 1);
-            string part2 = current.substr(pos + 2);
-
-            regularDefinitions.insert(pair<string, string>(part1, part2));
-        }
-    }
-    return regularDefinitions;
-}
-
-string NFA_maker::expandRegularExpression(string regularExpression, map<string,string> regularDefinitions)
+string NFA_maker::expand(string s)
 {
     map<string, string>::iterator itr;
     for (itr = regularDefinitions.begin(); itr != regularDefinitions.end(); itr++)
     {
         string regularDefinition = itr->first;
-        int pos = regularExpression.find(regularDefinition);
-        if (pos != -1)
+        int pos = s.find(regularDefinition);
+        while (pos != -1 && s[pos + regularDefinition.size()] != 's')
         {
-            regularExpression.replace(pos,regularDefinition.size(), itr->second);
+            string expansion = '(' + itr->second + ')';
+            s.replace(pos,regularDefinition.size(), expansion);
+            pos = s.find(regularDefinition);
         }
     }
-    return regularExpression;
+    return s;
 }
 
 NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
 {
-    NFA* result = new NFA;
+    NFA* getNFAindexed(string regularExpression, int start, int end)
+{
+    NFA* result = new NFA;;
 
     if (start == end)
     {
@@ -170,7 +153,21 @@ NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
         NFA* prevNFA = nfaInitial;
         for (int i = start; i < end; i++)
         {
-            if (regularExpression[i] == '(')
+            if (regularExpression[i] == ' ')
+                continue;
+            int skipped;
+            int isLambda = 0;
+
+            if (regularExpression[i] == '\\' && regularExpression[i-1] != '\\') {
+                i++;
+                skipped = 1;
+                if (regularExpression[i] == 'L')
+                    isLambda = 1;
+
+            } else
+                skipped = 0;
+
+            if (regularExpression[i] == '(' && skipped == 0)
             {
                 int brackets = 1;
                 int j;
@@ -230,10 +227,19 @@ NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
                 State* sNew = new State;
                 sNew->id = getNextID();
 
-
                 Edge* eNew = new Edge;
                 eNew->to = sNew;
-                eNew->guard = regularExpression[i];
+                if (isLambda == 1) {
+                    eNew->guard = 'ε';
+                    prevNFA->acceptingState->epsilonClosure.push_back(eNew->to);
+                }
+                else {
+                    eNew->guard = regularExpression[i];
+                    char* c = new char;
+                    *c = regularExpression[i];
+                    prevNFA->possibleInputs.insert(*c);
+                }
+
                 prevNFA->acceptingState->nextStates.push_back(eNew);
 
                 if (regularExpression[i+1] == '*' || regularExpression[i+1] == '+')
@@ -267,7 +273,7 @@ NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
                 }
                 else
                 {
-                    prevNFA->acceptingState = sNew; // SHOULD BE SNEWACCEPTING
+                    prevNFA->acceptingState = sNew;
                 }
             }
 
@@ -276,10 +282,41 @@ NFA* NFA_maker::getNFAindexed(string regularExpression, int start, int end)
     }
     return result;
 }
+    
+void buildNFAInputs(NFA* nfa) {
+    stack<State*> statesToVisit;
+    set<int> visited;
+
+    visited.insert(nfa->startState->id);
+    statesToVisit.push(nfa->startState);
+    while (!statesToVisit.empty())
+    {
+        State* current = statesToVisit.top();
+        statesToVisit.pop();
+        vector<Edge*> neighbors = current->nextStates;
+        for (int i = 0; i < neighbors.size(); i++)
+        {
+            Edge* neighbor = neighbors[i];
+            if (neighbor->guard != 'ε') {
+                char* c = new char;
+                *c = neighbor->guard;
+                nfa->possibleInputs.insert(*c);
+            }
+
+            if (visited.count(neighbor->to->id) == 0)
+            {
+                visited.insert(neighbor->to->id);
+                statesToVisit.push(neighbor->to);
+            }
+        }
+    }
+}
 
 NFA* NFA_maker::getNFA(string regularExpression)
 {
-    return getNFAindexed(regularExpression, 0, regularExpression.length());
+    NFA* result = getNFAindexed(regularExpression, 0, regularExpression.length());
+    buildNFAInputs(result);
+    return result;
 }
 
 void NFA_maker::showNFA(NFA* nfa)
