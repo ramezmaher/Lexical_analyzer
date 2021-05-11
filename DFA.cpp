@@ -53,6 +53,9 @@ void DFA::print_states(){
         state->print_dir();
         cout << "**********" <<  endl;
     }
+    cout << "start state -> "<<start_state->get_id()<<endl;
+    cout << "dead state -> "<<dead_state->get_id()<<endl;
+
 }
 
 void DFA::minimize(){
@@ -237,7 +240,14 @@ bool DFA::check_string(string s){
     for(int i = 0; i < s.length() ; i++){
         if(valid_inputs.find(s.at(i)) ==valid_inputs.end())
             return false;
+        if(current_state == dead_state)
+            {
+                cout<<"dead state"<<endl;
+                return false;
+            }
+        cout<<current_state->get_id()<<" --"<<s.at(i)<<"-->";
         current_state = current_state->edges[s.at(i)];
+        cout<<current_state->get_id()<<endl;
     }
     return current_state->isAccepting();
 }

@@ -23,6 +23,7 @@ int main()
 
     DFA_converter* dfac = new DFA_converter();
     DFA* dfa = dfac->convert_NFA(nfa,set);
+    dfa->print_states();
     cout << dfa->check_string("aaaaabb") << endl;
 
     return 0;
