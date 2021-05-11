@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
+#include <set>
 #include "DFA_state.h"
 
 
@@ -14,8 +15,7 @@ class DFA{
     int start_state_id;
     int dead_state_id;
     public:
-        DFA();
-        DFA(vector<char> inputs,vector<DFA_state*> all_states);
+        DFA(set<char> inputs,vector<DFA_state*> all_states);
         void print_states();
         DFA_state* get_start_state();
         DFA_state* get_dead_state();

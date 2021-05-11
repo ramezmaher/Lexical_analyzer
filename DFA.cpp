@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include <unordered_set>
 #include "DFA_state.h"
 #include "DFA.h"
 
 
-DFA::DFA(vector<char> inputs,vector<DFA_state*> all_states){
+DFA::DFA(set<char> inputs,vector<DFA_state*> all_states){
     //Initilize dead state
     DFA_state* fi_state = new DFA_state(false,all_states.size()+1);
     start_state = all_states[0];
@@ -225,6 +226,7 @@ DFA_state* DFA::get_dead_state(){
 
 void DFA:: delete_DFA(){
     for(auto x: states){
-        delete this;
+        delete x;
     }
+    delete this;
 }
