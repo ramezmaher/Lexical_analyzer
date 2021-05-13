@@ -11,7 +11,7 @@
 #include "DFA_state.h"
 
 
-DFA* DFA_converter::convert_NFA(NFA* nfa,set<char> input){
+DFA* DFA_converter::convert_NFA(NFA* nfa){
 
     //contains all the possible sets of the NFA
     unordered_set<unordered_set<State*>*> all_sets;
@@ -39,7 +39,7 @@ DFA* DFA_converter::convert_NFA(NFA* nfa,set<char> input){
     //we add it as unvisited. Otherwise, it was visited or in the queue waiting to be visited.
     while(!unvisited_sets.empty()){ 
         map<char,unordered_set<State*>*>* tuple = new map<char,unordered_set<State*>*>();
-        for(auto guard: input){
+        for(auto guard: nfa->possibleInputs){
             for(auto elem: *unvisited_sets.front()){
                 for(auto edge: elem->nextStates){
                     if(edge->guard == guard)
@@ -119,7 +119,7 @@ DFA* DFA_converter::convert_NFA(NFA* nfa,set<char> input){
         }
     }
     
-    DFA* dfa = new DFA(input,v);
+    DFA* dfa = new DFA(nfa->possibleInputs,v);
     return dfa;
 
 }

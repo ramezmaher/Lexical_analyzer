@@ -12,7 +12,7 @@ using namespace std;
 
 class DFA_converter{
     public:
-        DFA* convert_NFA(NFA* nfa,set<char> input);
+        DFA* convert_NFA(NFA* nfa);
     private:
         void visit_all_epsilon(queue<State*>* not_visited,unordered_set<State*>* visited,State* state);
 };
