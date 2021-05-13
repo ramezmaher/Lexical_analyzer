@@ -16,7 +16,7 @@ DFA* DFA_converter::convert_NFA(NFA* nfa,set<char> input){
     //contains all the possible sets of the NFA
     unordered_set<unordered_set<State*>*> all_sets;
 
-    unordered_map<unordered_set<State*>*,map<char,unordered_set<State*>*>*> nfa_table;
+    map<unordered_set<State*>*,map<char,unordered_set<State*>*>*> nfa_table;
     //contains only the unvisited sets of the NFA
     queue<unordered_set<State*>*> unvisited_sets;
 
@@ -92,7 +92,6 @@ DFA* DFA_converter::convert_NFA(NFA* nfa,set<char> input){
             empty_set = x.first;
         }
     }
-
     int i = 0;
     vector<DFA_state*> v;
     map<unordered_set<State*>*,int> map;

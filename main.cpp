@@ -9,22 +9,22 @@
 int main()
 {
     string regularExpression = "a(a|b)*|c";
-    /*string regularExpression2 = "(a|b(c|d|e|f)*bc)*de|g";
-    string regularExpression3 = "ab*c";
+    string regularExpression2 = "(a|b(c|d|e|f)*bc)*de|g";
+    /*string regularExpression3 = "ab*c";
     string regularExpression4 = "ab*|cd+|gk";
     string regularExpression5 = "ab";
     string regularExpression6 = "ab*|bc+";*/
 
     NFA_maker* make = new NFA_maker();
 
-    NFA* nfa = make->getNFA(regularExpression);
+    NFA* nfa = make->getNFA(regularExpression2);
     
     set<char> set = {'a','b','c'};
 
     DFA_converter* dfac = new DFA_converter();
     DFA* dfa = dfac->convert_NFA(nfa,set);
     dfa->print_states();
-    cout << dfa->check_string("aaaaabb") << endl;
+    cout << dfa->check_string("abc") << endl;
 
     return 0;
 }

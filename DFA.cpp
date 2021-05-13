@@ -39,7 +39,6 @@ DFA::DFA(set<char> inputs,vector<DFA_state*> all_states){
         dead_state_id = -1;
         delete fi_state;
     }
-
     //minimizes the DFA
     minimize();
 }
@@ -51,6 +50,7 @@ void DFA::print_states(){
     for(auto state: states){
         cout << state->get_id() << ":-" << endl;
         state->print_dir();
+        cout << "is Accepted ? " << state->isAccepting() << endl;
         cout << "**********" <<  endl;
     }
     cout << "start state -> "<<start_state->get_id()<<endl;
@@ -194,15 +194,17 @@ void DFA::minimize(){
 
     //reset starting state & dead state
     bool found = false;
+    bool foundDead = (dead_state_id == -1);
     for(int i = 0; i < level.size() ; i++){
         for(auto elem: level.at(i)){
             if(start_state_id == elem->get_id()){   
                 start_state = states.at(i);
                 start_state_id = i;
             }
-            else if(dead_state_id != -1 && dead_state_id == elem->get_id()){
+            else if( !foundDead && dead_state_id == elem->get_id()){
                 dead_state = states.at(i);
                 dead_state_id = i;
+                foundDead = true;
             }
             //delete this element from the heap
             delete elem;
