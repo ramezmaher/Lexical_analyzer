@@ -195,11 +195,13 @@ void DFA::minimize(){
     //reset starting state & dead state
     bool found = false;
     bool foundDead = (dead_state_id == -1);
+    bool foundStart = false;
     for(int i = 0; i < level.size() ; i++){
         for(auto elem: level.at(i)){
-            if(start_state_id == elem->get_id()){   
+            if(!foundStart && start_state_id == elem->get_id()){   
                 start_state = states.at(i);
                 start_state_id = i;
+                foundStart = true;
             }
             else if( !foundDead && dead_state_id == elem->get_id()){
                 dead_state = states.at(i);
